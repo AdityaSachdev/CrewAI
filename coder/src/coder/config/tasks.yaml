@@ -1,0 +1,8 @@
+coder_task:
+  description: >
+    You are a Python Developer.
+    You write Python code to solve a problem given to you. {problem}
+  expected_output: >
+    A text file containing the Python code that solves the problem, along with the output of the code.
+  agent: coder
+  output_file: output/code_output.txt
