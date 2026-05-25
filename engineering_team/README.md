@@ -1,54 +1,80 @@
-# EngineeringTeam Crew
+# Engineering Team Crew
 
-Welcome to the EngineeringTeam Crew project, powered by [crewAI](https://crewai.com). This template is designed to help you set up a multi-agent AI system with ease, leveraging the powerful and flexible framework provided by crewAI. Our goal is to enable your agents to collaborate effectively on complex tasks, maximizing their collective intelligence and capabilities.
+A four-agent software team that takes high-level requirements and delivers a working backend module, Gradio UI, and unit tests.
 
-## Installation
+Part of the [CrewAI projects collection](../README.md), based on Ed Donner's [Agentic AI Engineering course](https://www.udemy.com/course/the-complete-agentic-ai-engineering-course/).
 
-Ensure you have Python >=3.10 <3.14 installed on your system. This project uses [UV](https://docs.astral.sh/uv/) for dependency management and package handling, offering a seamless setup and execution experience.
+## What it does
 
-First, if you haven't already, install uv:
+Given a requirements brief, the crew runs a sequential pipeline:
+
+1. **Engineering lead** — writes a detailed design (classes, methods, signatures)
+2. **Backend engineer** — implements the Python module from the design
+3. **Frontend engineer** — builds a simple Gradio demo UI (`app.py`)
+4. **Test engineer** — writes unit tests for the backend
+
+Default project in `main.py`: a **trading simulation account management system** (`accounts.py` / `Account` class) with deposits, withdrawals, share trades, portfolio valuation, and balance guards.
+
+## Agents
+
+| Agent | Responsibility | Default LLM |
+|-------|----------------|-------------|
+| `engineering_lead` | System design document | `gpt-4o-mini` |
+| `backend_engineer` | Python backend module | `gpt-4o-mini` |
+| `frontend_engineer` | Gradio UI prototype | `gpt-4o` |
+| `test_engineer` | Unit tests | `gpt-4o-mini` |
+
+Configuration: `src/engineering_team/config/agents.yaml`, `src/engineering_team/config/tasks.yaml`
+
+## Requirements
+
+- Python **3.10–3.13**
+- [uv](https://docs.astral.sh/uv/)
+- [CrewAI CLI](https://docs.crewai.com)
+- API key: `OPENAI_API_KEY`
+- **Gradio** — included in project dependencies for the generated UI
+
+## Setup
 
 ```bash
-pip install uv
+cd engineering_team
+uv sync
 ```
 
-Next, navigate to your project directory and install the dependencies:
+Add `OPENAI_API_KEY` to your `.env` file.
 
-(Optional) Lock the dependencies and install them by using the CLI command:
-```bash
-crewai install
-```
-### Customizing
-
-**Add your `OPENAI_API_KEY` into the `.env` file**
-
-- Modify `src/engineering_team/config/agents.yaml` to define your agents
-- Modify `src/engineering_team/config/tasks.yaml` to define your tasks
-- Modify `src/engineering_team/crew.py` to add your own logic, tools and specific args
-- Modify `src/engineering_team/main.py` to add custom inputs for your agents and tasks
-
-## Running the Project
-
-To kickstart your crew of AI agents and begin task execution, run this from the root folder of your project:
+## Run
 
 ```bash
-$ crewai run
+crewai run
 ```
 
-This command initializes the engineering_team Crew, assembling the agents and assigning them tasks as defined in your configuration.
+Or:
 
-This example, unmodified, will run the create a `report.md` file with the output of a research on LLMs in the root folder.
+```bash
+uv run engineering_team
+```
 
-## Understanding Your Crew
+## Outputs
 
-The engineering_team Crew is composed of multiple AI agents, each with unique roles, goals, and tools. These agents collaborate on a series of tasks, defined in `config/tasks.yaml`, leveraging their collective skills to achieve complex objectives. The `config/agents.yaml` file outlines the capabilities and configurations of each agent in your crew.
+| File | Description |
+|------|-------------|
+| `output/accounts.py_design.md` | Architecture and API design |
+| `output/accounts.py` | Backend implementation |
+| `output/app.py` | Gradio demo UI |
+| `output/test_accounts.py` | Unit tests |
 
-## Support
+After the crew finishes, you can run the demo:
 
-For support, questions, or feedback regarding the EngineeringTeam Crew or crewAI.
-- Visit our [documentation](https://docs.crewai.com)
-- Reach out to us through our [GitHub repository](https://github.com/joaomdmoura/crewai)
-- [Join our Discord](https://discord.com/invite/X4JWnZnxPb)
-- [Chat with our docs](https://chatg.pt/DWjSBZn)
+```bash
+cd output
+uv run python app.py
+```
 
-Let's create wonders together with the power and simplicity of crewAI.
+## Customize
+
+Edit `requirements`, `module_name`, and `class_name` in `src/engineering_team/main.py` to have the team build a different application.
+
+## Credits
+
+Project structure and learning goals from **Ed Donner's** [Complete Agentic AI Engineering Course](https://edwarddonner.com/2025/04/21/the-complete-agentic-ai-engineering-course/) and [ed-donner/agents](https://github.com/ed-donner/agents) repository.

@@ -1,54 +1,71 @@
 # Debate Crew
 
-Welcome to the Debate Crew project, powered by [crewAI](https://crewai.com). This template is designed to help you set up a multi-agent AI system with ease, leveraging the powerful and flexible framework provided by crewAI. Our goal is to enable your agents to collaborate effectively on complex tasks, maximizing their collective intelligence and capabilities.
+A three-agent debate crew: one agent argues **for** a motion, another argues **against** it, and a judge decides which side was more convincing.
 
-## Installation
+Part of the [CrewAI projects collection](../README.md), based on Ed Donner's [Agentic AI Engineering course](https://www.udemy.com/course/the-complete-agentic-ai-engineering-course/).
 
-Ensure you have Python >=3.10 <3.14 installed on your system. This project uses [UV](https://docs.astral.sh/uv/) for dependency management and package handling, offering a seamless setup and execution experience.
+## What it does
 
-First, if you haven't already, install uv:
+1. **Proposing debator** — builds a persuasive case in favor of the motion
+2. **Opposing debator** — presents counterarguments against the motion
+3. **Judge** — reviews both sides and declares a winner with reasoning
+
+Default inputs in `main.py`:
+
+- **Topic:** Real estate investing
+- **Motion:** *"Buying a real estate property in India is a good investment"*
+
+## Agents & models
+
+| Agent | Role | Default LLM |
+|-------|------|-------------|
+| `debatorProposing` | Argues for the motion | OpenAI `gpt-4o-mini` |
+| `debatorOpposing` | Argues against the motion | Google `gemini-2.5-flash` |
+| `judge` | Evaluates and decides | Anthropic Claude 3.7 Sonnet |
+
+Agent definitions: `src/debate/config/agents.yaml`  
+Task flow: `src/debate/config/tasks.yaml`
+
+## Requirements
+
+- Python **3.10–3.13**
+- [uv](https://docs.astral.sh/uv/)
+- [CrewAI CLI](https://docs.crewai.com)
+- API keys: `OPENAI_API_KEY`, `GOOGLE_API_KEY`, `ANTHROPIC_API_KEY`
+
+## Setup
 
 ```bash
-pip install uv
+cd debate
+uv sync
 ```
 
-Next, navigate to your project directory and install the dependencies:
+Add your API keys to a `.env` file at the repo root or in this directory.
 
-(Optional) Lock the dependencies and install them by using the CLI command:
-```bash
-crewai install
-```
-### Customizing
-
-**Add your `OPENAI_API_KEY` into the `.env` file**
-
-- Modify `src/debate/config/agents.yaml` to define your agents
-- Modify `src/debate/config/tasks.yaml` to define your tasks
-- Modify `src/debate/crew.py` to add your own logic, tools and specific args
-- Modify `src/debate/main.py` to add custom inputs for your agents and tasks
-
-## Running the Project
-
-To kickstart your crew of AI agents and begin task execution, run this from the root folder of your project:
+## Run
 
 ```bash
-$ crewai run
+crewai run
 ```
 
-This command initializes the debate Crew, assembling the agents and assigning them tasks as defined in your configuration.
+Or from Python:
 
-This example, unmodified, will run the create a `report.md` file with the output of a research on LLMs in the root folder.
+```bash
+uv run debate
+```
 
-## Understanding Your Crew
+## Outputs
 
-The debate Crew is composed of multiple AI agents, each with unique roles, goals, and tools. These agents collaborate on a series of tasks, defined in `config/tasks.yaml`, leveraging their collective skills to achieve complex objectives. The `config/agents.yaml` file outlines the capabilities and configurations of each agent in your crew.
+| File | Description |
+|------|-------------|
+| `output/debatorProposing.md` | Argument in favor of the motion |
+| `output/debatorOpposing.md` | Argument against the motion |
+| `output/decide.md` | Judge's verdict and rationale |
 
-## Support
+## Customize
 
-For support, questions, or feedback regarding the Debate Crew or crewAI.
-- Visit our [documentation](https://docs.crewai.com)
-- Reach out to us through our [GitHub repository](https://github.com/joaomdmoura/crewai)
-- [Join our Discord](https://discord.com/invite/X4JWnZnxPb)
-- [Chat with our docs](https://chatg.pt/DWjSBZn)
+Edit `src/debate/main.py` to change `topic` and `motion`, or adjust agent prompts in the YAML config files.
 
-Let's create wonders together with the power and simplicity of crewAI.
+## Credits
+
+Project structure and learning goals from **Ed Donner's** [Complete Agentic AI Engineering Course](https://edwarddonner.com/2025/04/21/the-complete-agentic-ai-engineering-course/) and [ed-donner/agents](https://github.com/ed-donner/agents) repository.

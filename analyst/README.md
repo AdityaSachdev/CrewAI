@@ -1,54 +1,75 @@
 # Analyst Crew
 
-Welcome to the Analyst Crew project, powered by [crewAI](https://crewai.com). This template is designed to help you set up a multi-agent AI system with ease, leveraging the powerful and flexible framework provided by crewAI. Our goal is to enable your agents to collaborate effectively on complex tasks, maximizing their collective intelligence and capabilities.
+A hierarchical stock-analysis crew that discovers trending companies in a sector, researches them, and recommends the best investment candidate.
 
-## Installation
+Part of the [CrewAI projects collection](../README.md), based on Ed Donner's [Agentic AI Engineering course](https://www.udemy.com/course/the-complete-agentic-ai-engineering-course/).
 
-Ensure you have Python >=3.10 <3.14 installed on your system. This project uses [UV](https://docs.astral.sh/uv/) for dependency management and package handling, offering a seamless setup and execution experience.
+## What it does
 
-First, if you haven't already, install uv:
+1. **Trending company finder** — searches the web for 2–3 companies trending in `{sector}`
+2. **Financial researcher** — produces detailed analysis for each company
+3. **Stock picker** — selects the best investment and explains why others were passed over
+4. **Manager** — delegates tasks across the crew in a hierarchical workflow
+
+Default sector in `main.py`: **India's Defence Industry**
+
+## Key features
+
+- **Hierarchical process** — manager agent delegates to specialists
+- **Memory** — short-term, long-term, and entity memory (stored under `data/`)
+- **Web search** — SerperDevTool for live news and research
+- **Structured outputs** — Pydantic models for company lists and research reports
+- **Multi-LLM routing** — OpenAI, Google Gemini, and Anthropic Claude per agent
+
+Agent definitions: `src/analyst/config/agents.yaml`  
+Tasks and output paths: `src/analyst/config/tasks.yaml`  
+Crew assembly: `src/analyst/crew.py`
+
+## Requirements
+
+- Python **3.10–3.13**
+- [uv](https://docs.astral.sh/uv/)
+- [CrewAI CLI](https://docs.crewai.com)
+- API keys:
+  - `OPENAI_API_KEY`
+  - `ANTHROPIC_API_KEY`
+  - `GOOGLE_API_KEY`
+  - `SERPER_API_KEY`
+
+## Setup
 
 ```bash
-pip install uv
+cd analyst
+uv sync
 ```
 
-Next, navigate to your project directory and install the dependencies:
+Add the required keys to a `.env` file at the repo root or in this directory.
 
-(Optional) Lock the dependencies and install them by using the CLI command:
-```bash
-crewai install
-```
-### Customizing
-
-**Add your `OPENAI_API_KEY` into the `.env` file**
-
-- Modify `src/analyst/config/agents.yaml` to define your agents
-- Modify `src/analyst/config/tasks.yaml` to define your tasks
-- Modify `src/analyst/crew.py` to add your own logic, tools and specific args
-- Modify `src/analyst/main.py` to add custom inputs for your agents and tasks
-
-## Running the Project
-
-To kickstart your crew of AI agents and begin task execution, run this from the root folder of your project:
+## Run
 
 ```bash
-$ crewai run
+crewai run
 ```
 
-This command initializes the analyst Crew, assembling the agents and assigning them tasks as defined in your configuration.
+Or:
 
-This example, unmodified, will run the create a `report.md` file with the output of a research on LLMs in the root folder.
+```bash
+uv run analyst
+```
 
-## Understanding Your Crew
+## Outputs
 
-The analyst Crew is composed of multiple AI agents, each with unique roles, goals, and tools. These agents collaborate on a series of tasks, defined in `config/tasks.yaml`, leveraging their collective skills to achieve complex objectives. The `config/agents.yaml` file outlines the capabilities and configurations of each agent in your crew.
+| File | Description |
+|------|-------------|
+| `output/trending_companies.json` | Trending companies with tickers and reasons |
+| `output/research_report.json` | Per-company market analysis and investment outlook |
+| `output/decision.md` | Final pick, rationale, and rejected alternatives |
+| `data/*.db` | Memory stores (short-term, long-term, entity) |
 
-## Support
+## Customize
 
-For support, questions, or feedback regarding the Analyst Crew or crewAI.
-- Visit our [documentation](https://docs.crewai.com)
-- Reach out to us through our [GitHub repository](https://github.com/joaomdmoura/crewai)
-- [Join our Discord](https://discord.com/invite/X4JWnZnxPb)
-- [Chat with our docs](https://chatg.pt/DWjSBZn)
+Edit the `sector` input in `src/analyst/main.py`, or change agent roles and LLM assignments in the YAML configs.
 
-Let's create wonders together with the power and simplicity of crewAI.
+## Credits
+
+Project structure and learning goals from **Ed Donner's** [Complete Agentic AI Engineering Course](https://edwarddonner.com/2025/04/21/the-complete-agentic-ai-engineering-course/) and [ed-donner/agents](https://github.com/ed-donner/agents) repository.

@@ -1,54 +1,65 @@
 # Coder Crew
 
-Welcome to the Coder Crew project, powered by [crewAI](https://crewai.com). This template is designed to help you set up a multi-agent AI system with ease, leveraging the powerful and flexible framework provided by crewAI. Our goal is to enable your agents to collaborate effectively on complex tasks, maximizing their collective intelligence and capabilities.
+A single-agent crew that writes Python code to solve a given problem and executes it safely inside Docker.
 
-## Installation
+Part of the [CrewAI projects collection](../README.md), based on Ed Donner's [Agentic AI Engineering course](https://www.udemy.com/course/the-complete-agentic-ai-engineering-course/).
 
-Ensure you have Python >=3.10 <3.14 installed on your system. This project uses [UV](https://docs.astral.sh/uv/) for dependency management and package handling, offering a seamless setup and execution experience.
+## What it does
 
-First, if you haven't already, install uv:
+The **coder** agent receives a programming problem, writes Python to solve it, runs the code in a sandboxed Docker container, and returns both the source and program output.
+
+Default problem in `main.py` — estimate π using the Leibniz series:
+
+> Write Python code to calculate the first 10,000 terms of the series, multiplying the total by 4:  
+> `1/1 − 1/3 + 1/5 − 1/7 + 1/9 − 1/11 + ...`
+
+## Key features
+
+- **Safe code execution** — `code_execution_mode="safe"` runs agent-generated code in Docker
+- **Retry logic** — up to 3 retries with a 30-second execution timeout
+- **Sequential process** — single agent, single task
+
+Configuration: `src/coder/config/agents.yaml`, `src/coder/config/tasks.yaml`, `src/coder/crew.py`
+
+## Requirements
+
+- Python **3.10–3.13**
+- [uv](https://docs.astral.sh/uv/)
+- [CrewAI CLI](https://docs.crewai.com)
+- **[Docker Desktop](https://docs.docker.com/desktop/)** — must be running for code execution
+- API key: `OPENAI_API_KEY`
+
+## Setup
 
 ```bash
-pip install uv
+cd coder
+uv sync
 ```
 
-Next, navigate to your project directory and install the dependencies:
+Ensure Docker Desktop is installed and running, then add `OPENAI_API_KEY` to your `.env` file.
 
-(Optional) Lock the dependencies and install them by using the CLI command:
-```bash
-crewai install
-```
-### Customizing
-
-**Add your `OPENAI_API_KEY` into the `.env` file**
-
-- Modify `src/coder/config/agents.yaml` to define your agents
-- Modify `src/coder/config/tasks.yaml` to define your tasks
-- Modify `src/coder/crew.py` to add your own logic, tools and specific args
-- Modify `src/coder/main.py` to add custom inputs for your agents and tasks
-
-## Running the Project
-
-To kickstart your crew of AI agents and begin task execution, run this from the root folder of your project:
+## Run
 
 ```bash
-$ crewai run
+crewai run
 ```
 
-This command initializes the coder Crew, assembling the agents and assigning them tasks as defined in your configuration.
+Or:
 
-This example, unmodified, will run the create a `report.md` file with the output of a research on LLMs in the root folder.
+```bash
+uv run coder
+```
 
-## Understanding Your Crew
+## Output
 
-The coder Crew is composed of multiple AI agents, each with unique roles, goals, and tools. These agents collaborate on a series of tasks, defined in `config/tasks.yaml`, leveraging their collective skills to achieve complex objectives. The `config/agents.yaml` file outlines the capabilities and configurations of each agent in your crew.
+| File | Description |
+|------|-------------|
+| `output/code_output.txt` | Generated Python code and execution result |
 
-## Support
+## Customize
 
-For support, questions, or feedback regarding the Coder Crew or crewAI.
-- Visit our [documentation](https://docs.crewai.com)
-- Reach out to us through our [GitHub repository](https://github.com/joaomdmoura/crewai)
-- [Join our Discord](https://discord.com/invite/X4JWnZnxPb)
-- [Chat with our docs](https://chatg.pt/DWjSBZn)
+Change the `problem` string in `src/coder/main.py` to ask the agent to solve a different challenge.
 
-Let's create wonders together with the power and simplicity of crewAI.
+## Credits
+
+Project structure and learning goals from **Ed Donner's** [Complete Agentic AI Engineering Course](https://edwarddonner.com/2025/04/21/the-complete-agentic-ai-engineering-course/) and [ed-donner/agents](https://github.com/ed-donner/agents) repository.
